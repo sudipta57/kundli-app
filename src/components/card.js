@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 const Card = () => {
+  const [city, setCity] = useState([]);
   const [girdetails, setgirldetails] = useState();
   const handleongirlchange = (e) => {
     setgirldetails({ ...girdetails, [e.target.name]: e.target.value });
@@ -9,10 +10,33 @@ const Card = () => {
   const handleonboychange = (e) => {
     setboydetails({ ...boydetails, [e.target.name]: e.target.value });
   };
-  fetch("https://indian-cities-api-nocbegfhqg.now.sh/cities")
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.log(error));
+
+  //  fetching the cities
+  const fetchCity = async () => {
+    try {
+      const response = await fetch(
+        "https://countriesnow.space/api/v0.1/countries/cities",
+        {
+          method: "POST", // Specify the HTTP method (GET, POST, etc.)
+          headers: {
+            "Content-Type": "application/json", // Set the content type
+          },
+          body: JSON.stringify({ country: "india" }), // Pass the country name
+        }
+      );
+
+      const data = await response.json();
+      setCity(data.data);
+      console.log(data.data);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCity();
+  }, []);
+
   return (
     <>
       <div className="max-w-[1000px] bg-pink-100 h-[600px] m-auto  rounded-lg shadow-2xl text-center">
@@ -23,7 +47,7 @@ const Card = () => {
             <div>
               <label
                 htmlFor="boyName"
-                class="block font-medium text-gray-700 ps-2"
+                className="block font-medium text-gray-700 ps-2"
               >
                 Boy's Name
               </label>
@@ -32,15 +56,15 @@ const Card = () => {
                 id="boyName"
                 name="boyName"
                 placeholder="Enter boy's name"
-                class="mt-1 p-2 border rounded-md w-full"
+                className="mt-1 p-2 border rounded-md w-full"
                 onChange={handleonboychange}
               />
             </div>
 
-            <div class="mt-4">
+            <div className="mt-4">
               <label
                 htmlFor="boyDOB"
-                class="block font-medium text-gray-700 ps-2"
+                className="block font-medium text-gray-700 ps-2"
               >
                 Date of Birth
               </label>
@@ -48,15 +72,15 @@ const Card = () => {
                 type="date"
                 id="boyDOB"
                 name="boyDOB"
-                class="mt-1 p-2 border rounded-md w-full"
+                className="mt-1 p-2 border rounded-md w-full"
                 onChange={handleonboychange}
               />
             </div>
 
-            <div class="mt-4">
+            <div className="mt-4">
               <label
                 htmlFor="boyTimeOfBirth"
-                class="block font-medium text-gray-700 ps-2"
+                className="block font-medium text-gray-700 ps-2"
               >
                 Time of Birth
               </label>
@@ -64,26 +88,30 @@ const Card = () => {
                 type="time"
                 id="boyTimeOfBirth"
                 name="boyTimeOfBirth"
-                class="mt-1 p-2 border rounded-md w-full"
+                className="mt-1 p-2 border rounded-md w-full"
                 onChange={handleonboychange}
               />
             </div>
 
-            <div class="mt-4">
+            <div className="mt-4">
               <label
                 htmlFor="boyPlaceOfBirth"
-                class="block font-medium text-gray-700 ps-2"
+                className="block font-medium text-gray-700 ps-2"
               >
                 Place of Birth
               </label>
-              <input
-                type="text"
-                id="boyPlaceOfBirth"
-                name="boyPlaceOfBirth"
-                placeholder="Enter place of birth"
-                class="mt-1 p-2 border rounded-md w-full"
-                onChange={handleonboychange}
-              />
+              <div className="datalist-holder">
+                <input
+                  list="country"
+                  name="country"
+                  className="datalist-input mt-1 p-2 border rounded-md w-full"
+                />
+                <datalist id="country">
+                  {city.map((cities, indx) => (
+                    <option value={cities} key={indx} />
+                  ))}
+                </datalist>
+              </div>
             </div>
           </div>
           <div className="bg-white w-[400px] h-[400px] text-left rounded-lg border-black border-2">
@@ -91,7 +119,7 @@ const Card = () => {
             <div>
               <label
                 htmlFor="boyName"
-                class="block font-medium text-gray-700 ps-2"
+                className="block font-medium text-gray-700 ps-2"
               >
                 Girl's Name
               </label>
@@ -100,15 +128,15 @@ const Card = () => {
                 id="boyName"
                 name="girlname"
                 placeholder="Enter girl's name"
-                class="mt-1 p-2 border rounded-md w-full"
+                className="mt-1 p-2 border rounded-md w-full"
                 onChange={handleongirlchange}
               />
             </div>
 
-            <div class="mt-4">
+            <div className="mt-4">
               <label
                 htmlFor="boyDOB"
-                class="block font-medium text-gray-700 ps-2"
+                className="block font-medium text-gray-700 ps-2"
               >
                 Date of Birth
               </label>
@@ -116,15 +144,15 @@ const Card = () => {
                 type="date"
                 id="boyDOB"
                 name="girlbirthdate"
-                class="mt-1 p-2 border rounded-md w-full"
+                className="mt-1 p-2 border rounded-md w-full"
                 onChange={handleongirlchange}
               />
             </div>
 
-            <div class="mt-4">
+            <div className="mt-4">
               <label
                 htmlFor="boyTimeOfBirth"
-                class="block font-medium text-gray-700 ps-2"
+                className="block font-medium text-gray-700 ps-2"
               >
                 Time of Birth
               </label>
@@ -132,26 +160,30 @@ const Card = () => {
                 type="time"
                 id="boyTimeOfBirth"
                 name="girlbirthTime"
-                class="mt-1 p-2 border rounded-md w-full"
+                className="mt-1 p-2 border rounded-md w-full"
                 onChange={handleongirlchange}
               />
             </div>
 
-            <div class="mt-4">
+            <div className="mt-4">
               <label
                 htmlFor="boyPlaceOfBirth"
-                class="block font-medium text-gray-700 ps-2"
+                className="block font-medium text-gray-700 ps-2"
               >
                 Place of Birth
               </label>
-              <input
-                type="text"
-                id="boyPlaceOfBirth"
-                name="girlbirthplace"
-                placeholder="Enter place of birth"
-                class="mt-1 p-2 border rounded-md w-full"
-                onChange={handleongirlchange}
-              />
+              <div className="datalist-holder">
+                <input
+                  list="country"
+                  name="country"
+                  className="datalist-input mt-1 p-2 border rounded-md w-full"
+                />
+                <datalist id="country">
+                  {city.map((cities, indx) => (
+                    <option value={cities} key={indx} />
+                  ))}
+                </datalist>
+              </div>
             </div>
           </div>
         </div>
